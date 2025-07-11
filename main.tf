@@ -12,14 +12,3 @@ resource "azurerm_subnet" "snet" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-resource "azurerm_network_interface" "vm-nic" {
-  name                = "${var.prefix}-vm-nic"
-  location            = var.location
-  resource_group_name = var.virtual_machine_rg
-
-  ip_configuration {
-    name                          = "vm-nic-ip-configuration"
-    subnet_id                     = azurerm_subnet.snet.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
