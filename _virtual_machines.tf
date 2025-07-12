@@ -1,9 +1,13 @@
 // Windows Virtual Machine
 
+// Network Interface is used to connect an Azure VM to a Virtual Network (VNet), every vm must have a unique nic
+
 resource "azurerm_network_interface" "vm-nic" {
   name                = "${var.prefix}-vm-nic"
   location            = var.location
   resource_group_name = var.virtual_machine_rg
+
+// Assigns a private IP from compute subnet
 
   ip_configuration {
     name                          = "vm-nic-ip-configuration"
@@ -16,8 +20,10 @@ resource "azurerm_virtual_machine" "windows-vm" {
   name                  = "${var.prefix}-windows-vm"
   location              = var.location
   resource_group_name   = var.virtual_machine_rg
-  network_interface_ids = [azurerm_network_interface.vm-nic.id]
+  network_interface_ids = [azurerm_network_interface.vm-nic.id] // this is a reference to nic-id defined above
   vm_size               = "Standard_DS1_v2"
+
+  // VM configurations such as disk & os
 
   storage_image_reference {
     publisher = "Canonical"
@@ -40,7 +46,7 @@ resource "azurerm_virtual_machine" "windows-vm" {
     disable_password_authentication = false
   }
   tags = {
-    environment = "staging"
+    environment = "production"
   }
 }
 
